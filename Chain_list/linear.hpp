@@ -23,8 +23,8 @@ public:
 	T element;
 	chainNode<T> *next;
 
-	chainNode() = default;
-	chainNode(const T &ele) : element(ele) { }
+	chainNode() { }
+	chainNode(const T &ele) : element(ele),next(nullptr) { }
 	chainNode(const T &ele,chainNode<T> *nex) : element(ele),next(nex) { }
 };
 
