@@ -79,7 +79,7 @@ matrix<T> matrix<T>::operator +(const matrix<T> &rhs) const
 	}
 	matrix<T> data(theRows,theCols);
 	for( int i = 0; i != theRows * theCols; ++i ){
-		data[i] = element[i] + rhs.element[i];
+		data.element[i] = element[i] + rhs.element[i];
 	}
 	return data;
 }
