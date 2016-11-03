@@ -1,3 +1,15 @@
+/*******************************************
+
+
+@file    Linear_list
+@author  jieshicheng
+@data    1 Nov 2016
+@remark  linear list
+@note    this is a test txt
+
+
+*********************************************/
+
 #include<iostream>
 #include"list.hpp"
 
