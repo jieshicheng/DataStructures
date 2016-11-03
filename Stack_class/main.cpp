@@ -1,3 +1,14 @@
+/************************************
+
+@file    Stack_list
+@author  jieshicheng
+@data    2 Nov 2016
+@remark  stack list by array
+@note    this is a test txt
+
+
+*************************************/
+
 #include"arrayStack.hpp"
 
 #include<iostream>

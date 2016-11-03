@@ -51,6 +51,7 @@ void arrayStack<T>::push(const T &thelement)
 {
 	if( stackTop == stackLength - 1 ){
 		changeLength1D(stack,stackLength,2 * stackLength);
+		stackLength *= 2;
 	}
 	stack[++stackTop] = thelement;
 }
