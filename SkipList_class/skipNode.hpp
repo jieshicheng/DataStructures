@@ -17,7 +17,10 @@ public:
 	{
 		next = new skipNode<K,E>* [size];
 	}
-	~skipNode() = default;
+	~skipNode()
+	{
+		delete []next;
+	}
 };
 
 #endif

@@ -20,6 +20,7 @@ public:
 	pair<const K,E> *find(const K &) const;
 	void erase(const K &);
 	void insert(const pair<const K,E> &);
+	void output() const;
 private:
 	int level() const;
 	skipNode<K,E> *search(const K &the_key) const;
@@ -62,7 +63,7 @@ template<typename K,typename E>
 skipNode<K,E> *skipList<K,E>::search(const K &the_key) const
 {
 	skipNode<K,E> *beforeNode = headerNode;
-	for( int i = levels; i >= 0; --i ){
+	for( int i = levels; i >= 0; i-- ){
 		while(beforeNode->next[i]->element.first < the_key )
 			beforeNode = beforeNode->next[i];
 		last[i] = beforeNode;
@@ -85,7 +86,7 @@ skipList<K,E>::skipList(K largeKey,int maxPairs,float prob)
 	tailNode = new skipNode<K,E>(tailPair,0);
 	last = new skipNode<K,E>* [maxLevel + 1];
 
-	for( int i = 0; i <= maxLevel; ++i ){
+	for( int i = 0; i <= maxLevel; i++ ){
 		headerNode->next[i] = tailNode;
 	}
 }
@@ -96,7 +97,7 @@ pair<const K,E> *skipList<K,E>::find(const K &the_key) const
 	if( the_key >= tailKey )
 		return NULL;
 	skipNode<K,E> *beforeNode = headerNode;
-	for( int i = levels; i >= 0; --i ){
+	for( int i = levels; i >= 0; i-- ){
 		while(beforeNode->next[i]->element.first < the_key)
 			beforeNode = beforeNode->next[i];
 	}
@@ -115,8 +116,8 @@ void skipList<K,E>::erase(const K &the_key)
 	skipNode<K,E> *theNode = search(the_key);
 	if( theNode->element.first != the_key )
 		return ;
-	for( int i = 0; i <= levels && last[i]->next[i] == theNode; ++i ){
-		last[i]->next[i] == theNode->next[i];
+	for( int i = 0; i <= levels && last[i]->next[i] == theNode; i++ ){
+		last[i]->next[i] = theNode->next[i];
 	}
 	while( levels > 0 && headerNode->next[levels] == tailNode )
 		--levels;
@@ -144,7 +145,7 @@ void skipList<K,E>::insert(const pair<const K,E> &the_pair)
 		last[theLevel] = headerNode;
 	}
 	skipNode<K,E> *newNode = new skipNode<K,E>(the_pair,theLevel + 1);
-	for( int i = 0; i <= theLevel; ++i ){
+	for( int i = 0; i <= theLevel; i++ ){
 		newNode->next[i] = last[i]->next[i];
 		last[i]->next[i] = newNode;
 	}
@@ -152,4 +153,13 @@ void skipList<K,E>::insert(const pair<const K,E> &the_pair)
 	return ;
 }
 
-
+template<typename K,typename E>
+void skipList<K,E>::output() const
+{
+	skipNode<K,E> *theNode = headerNode->next[0];
+	while( theNode != tailNode ){
+		cout<<theNode->element.second<<endl;
+		theNode = theNode->next[0];
+	}
+	cout<<"the levels is :"<<levels<<endl;
+}

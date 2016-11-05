@@ -21,8 +21,9 @@ int main()
 	for(int i = 0; i != 10; ++i)
 		vec.insert(pair<int,int>(i,i+1));
 
-	vec.erase(9);
-	cout<<vec.find(2)->first<<" "<<endl;;
+	cout<<vec.find(2)->first<<" "<<endl;
+	vec.erase(4);
+	vec.output();
 	cout<<vec.empty()<<" "<<vec.size()<<endl;	
 	return 0;
 }
