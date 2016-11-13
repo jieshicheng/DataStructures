@@ -25,4 +25,15 @@ private:
 	string message;
 };
 
+class AVLtreeEmpty{
+
+public:
+	AVLtreeEmpty(string theMessage = "the tree is empty")
+			{ message = theMessage; }
+	void outputMessage() { cout<<message<<endl; }
+private:
+	strin message;
+};
+
+
 #endif
