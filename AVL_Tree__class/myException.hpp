@@ -2,6 +2,7 @@
 #define _EXCEPTION_
 
 #include<iostream>
+#include<string>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ public:
 			{ message = theMessage; }
 	void outputMessage() { cout<<message<<endl; }
 private:
-	strin message;
+	string message;
 };
 
 
