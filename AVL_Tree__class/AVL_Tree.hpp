@@ -23,15 +23,19 @@ class AVL_tree{
 
 	bool empty() const { return nodeSize == 0; }
 	int size() const { return nodeSize; }
-	bool insert(AVL_node **,const int &,bool *);//
+	void insert(const int &,bool *);
 	void erase(const int &);//
 	AVL_node *find(const int &);
+	void output() const;
 
     private:
-	void leftBalance(AVL_node **); //
-	void rightBalance(AVL_node **); //
+	void leftBalance(AVL_node **); 
+	void rightBalance(AVL_node **); 
 	void R_Rotate(AVL_node **);
 	void L_Rotate(AVL_node **);
+	bool AVLinsert(AVL_node **,const int &,bool *);
+	void midLook(AVL_node *) const;
+
 	AVL_node *root;
 	int nodeSize;
 };
@@ -68,15 +72,15 @@ void AVL_tree::leftBalance(AVL_node **theRoot)
 			Lr = L->right;
 			switch( Lr->bf ){
 				case LH:
-					(*theRoot)->bf = LH;
+					(*theRoot)->bf = RH;
 					L->bf = EH;
 					break;
 				case EH:
 					(*theRoot)->bf = L->bf = EH;
 					break;
 				case RH:
-					(*theRoot)->bf = LH;
-					L->bf = EH;
+					(*theRoot)->bf = EH;
+					L->bf = LH;
 					break;
 			}
 			Lr->bf = EH;
@@ -97,14 +101,14 @@ void AVL_tree::rightBalance(AVL_node **theRoot)
 			Lr = L->left;
 			switch( Lr->bf ){
 				case RH:
-					(*theRoot)->bf = RH;
-					L->bf = EH;
+					(*theRoot)->bf = EH;
+					L->bf = LH;
 					break;
 				case EH:
 					(*theRoot)->bf = L->bf = EH;
 					break;
 				case LH:
-					(*theRoot)->bf = RH;
+					(*theRoot)->bf = LH;
 					L->bf = EH;
 					break;
 			}
@@ -120,17 +124,19 @@ AVL_node *AVL_tree::find(const int &value)
 		throw AVLtreeEmpty("AVL tree is empty");
 	
 	AVL_node *p = root;
-	while(p->element != value){
+	while(p != NULL ){
 		if(value > p->element)
 			p = p->right;
-		else
+		else if(value < p->element)
 			p = p->left;
+		else
+			return p;
 	}
 
 	return p;
 }
 
-bool AVL_tree::insert(AVL_node **T,const int &key,bool *taller)
+bool AVL_tree::AVLinsert(AVL_node **T,const int &key,bool *taller)
 {
 	if( !*T ){
 		*T = new AVL_node(key);
@@ -142,7 +148,7 @@ bool AVL_tree::insert(AVL_node **T,const int &key,bool *taller)
 			return false;
 		}
 		if(key < (*T)->element){
-			if( !insert(&(*T)->left,key,taller) )
+			if( !AVLinsert(&(*T)->left,key,taller) )
 				return false;
 			if(*taller){
 				switch((*T)->bf){
@@ -162,7 +168,7 @@ bool AVL_tree::insert(AVL_node **T,const int &key,bool *taller)
 			}
 		}
 		else{
-			if( !insert(&(*T)->right,key,taller) )
+			if( !AVLinsert(&(*T)->right,key,taller) )
 				return false;
 			if(*taller){
 				switch((*T)->bf){
@@ -187,15 +193,33 @@ bool AVL_tree::insert(AVL_node **T,const int &key,bool *taller)
 	
 }
 
+void AVL_tree::insert(const int &key,bool *taller)
+{
+	AVLinsert(&root,key,taller);
+	++nodeSize;
+}
+/*
 void AVL_tree::erase(const int &key)
 {
 	AVL_node *p = find(key);
 	
 }
+*/
 
+inline void AVL_tree::midLook(AVL_node *p) const
+{
+	if( p ){
+		midLook(p->left);
+		cout<<p->element<<" ";
+		midLook(p->right);
+	}
+}
 
-
-
+inline void AVL_tree::output() const
+{
+	midLook(root);
+	cout<<endl;
+}
 
 
 
