@@ -192,25 +192,25 @@ AVL_node *AVLTree::remove(AVL_node* &node,const int &key)
 				AVL_node *temp = node;
 				if(node->left == nullptr)
 					node = node->right;
-				else
+				else if(node->right == nullptr)
 					node = node->left;
 				delete temp;
 				temp = nullptr;
 			}
 		}
 		else if(key > node->element){
-			node = remove(node->right,key);
-			if(height(node->right) - height(node->left) == 2){
-				if(height(node->right->left) > height(node->right->right))
+			node->right = remove(node->right,key);
+			if(height(node->left) - height(node->right) == 2){
+				if(height(node->left->right) > height(node->left->left))
 					node = leftRightRotation(node);
 				else
 					node = leftRotation(node);
 			}
 		}
 		else if(key < node->element){
-			node = remove(node->left,key);
-			if(height(node->left) - height(node->right) == 2){
-				if(height(node->left->right) > height(node->left->left))
+			node->left = remove(node->left,key);
+			if(height(node->right) - height(node->left) == 2){
+				if(height(node->right->left) > height(node->right->right))
 					node = rightLeftRotation(node);
 				else
 					node = rightRotation(node);
