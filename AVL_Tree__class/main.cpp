@@ -1,4 +1,4 @@
-#include"AVL_Tree.hpp"
+#include"AVL_tree.hpp"
 
 #include<iostream>
 
@@ -6,16 +6,18 @@ using namespace std;
 
 int main()
 {
-	AVL_tree tree;
-	bool *taller = new bool();
-	for( int i = 0; i != 5; ++i ){
-		tree.insert(i,taller);
-	}
-	tree.output();
-	if( tree.find(5) )
-		cout<<"true"<<endl;
+	AVLTree tree;
+	for( int i = 0; i != 20; ++i )
+		tree.insert(i);
+	cout<<"preOrder :";
+	tree.preOrder();
+	cout<<"InOrder :";
+	tree.InOrder();
+	cout<<"postOrder :";
+	tree.postOrder();
 
-	cout<<tree.empty()<<" "<<tree.size()<<endl;
+	tree.remove(19);
+	tree.InOrder();
 
 	return 0;
 }
