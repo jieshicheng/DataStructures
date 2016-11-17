@@ -19,8 +19,8 @@ class rbTree{
 	~rbTree();  //
 
 	void Insert(const int &key);  //
-	void Delete(const int &key);
-	TreeNode *Find(const int &key) const;
+	void Delete(const int &key);  //
+	TreeNode *Find(const int &key) const;  //
 	void Print() const;  //preOrder
 	int Size() { return theSize; }  //
 	int maxmum() const;  //
@@ -28,10 +28,10 @@ class rbTree{
 	
     private:
 	void RB_Insert(const int &key); //
-	void RB_Delete(const int &key);
+	void RB_Delete(const int &key);  //
 
 	void RB_Insert_FixedUp(TreeNode *node);  //
-	void RB_Delete_FixedUp(TreeNode *node);
+	void RB_Delete_FixedUp(TreeNode *node);  //
 
 	void RB_Left_Rotate(TreeNode *node); //
 	void RB_Right_Rotate(TreeNode *node);  //
@@ -244,4 +244,27 @@ inline void rbTree::Insert(const int &key)
 	RB_Insert(key);
 	cout<<"insert successful"<<endl;
 }
+
+TreeNode *rbTree::Find(const int &key)
+{
+}
+
+void rbTree::TransPlant(TreeNode *u,TreeNode *v)
+{
+}
+
+void rbTree::Delete(const int &key)
+{
+}
+
+void rbTree::RB_Delete(const int &key)
+{
+}
+
+void rbTree::RB_Delete_FixedUp(TreeNode *node)
+{
+}
+
+
+
 #endif
