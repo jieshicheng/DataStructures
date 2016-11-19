@@ -36,5 +36,15 @@ private:
 	string message;
 };
 
+class NotFindDeleteNode{
+
+public:
+	NotFindDeleteNode(string theMessage = "Not find delete node")
+			{ message = theMessage; }
+	void outputMessage() { cout<<message<<endl; }
+private:
+	string message;
+}; 
+
 
 #endif

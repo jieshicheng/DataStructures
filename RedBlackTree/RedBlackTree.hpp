@@ -2,21 +2,42 @@
 #define _RBTREE_
 
 #include"myException.hpp"
-#include"rbTreeNode.hpp"
 
 #include<iostream>
 
 using namespace std;
 
-#define INF 0x7FFFFF
+#define INF 999
+
+enum COLOR {RED,BLACK};
+
+class TreeNode{
+	friend class rbTree;
+    public:
+	TreeNode(const int &key,COLOR theColor,TreeNode *l,TreeNode *r,TreeNode *p) :
+			element(key),color(theColor),left(l),right(r),parent(p) { }
+
+	~TreeNode()
+	{ 
+		delete left,right,parent;
+		left = right = parent = nullptr;
+	}
+    private:
+	int element;
+	COLOR color;
+	TreeNode *left;
+	TreeNode *right;
+	TreeNode *parent;
+};
+
 
 TreeNode *NULL_ptr = new TreeNode(INF,BLACK,nullptr,nullptr,nullptr);
 
 class rbTree{
 	friend class TreeNode;
     public:
-	rbTree();  //
-	~rbTree();  //
+	rbTree();
+	~rbTree();
 
 	void Insert(const int &key);  //
 	void Delete(const int &key);  //
@@ -25,7 +46,7 @@ class rbTree{
 	int Size() { return theSize; }  //
 	int maxmum() const;  //
 	int minmum() const;  //
-	
+
     private:
 	void RB_Insert(const int &key); //
 	void RB_Delete(const int &key);  //
@@ -44,6 +65,7 @@ class rbTree{
 	TreeNode *minmum(TreeNode *node) const; //
 
 	void destoryTree(TreeNode *node);
+	void destoryNode(TreeNode *node);
     private:
 	TreeNode *root;
 	TreeNode *empty_ptr;
@@ -51,7 +73,7 @@ class rbTree{
 	
 };
 
-void rbTree::destoryTree(TreeNode *node)
+inline void rbTree::destoryTree(TreeNode *node)
 {
 	if(node != NULL_ptr){
 		destoryTree(node->left);
@@ -242,27 +264,76 @@ void rbTree::RB_Insert(const int &key)
 inline void rbTree::Insert(const int &key)
 {
 	RB_Insert(key);
-	cout<<"insert successful"<<endl;
 }
 
-TreeNode *rbTree::Find(const int &key)
+inline TreeNode *rbTree::Find(const int &key) const
 {
+	TreeNode *p = this->root;
+	while(p->element != key && p != NULL_ptr){
+		if(key > p->element)
+			p = p->right;
+		else
+			p = p->left;
+	}
+	if(p == NULL_ptr)
+		cout<<"no find"<<endl;
+	return p;
 }
 
-void rbTree::TransPlant(TreeNode *u,TreeNode *v)
+inline void rbTree::destoryNode(TreeNode *node)
 {
+	if(node != NULL_ptr){
+		delete node;
+		node = nullptr;
+	}
 }
 
-void rbTree::Delete(const int &key)
+
+inline void rbTree::Delete(const int &key)
 {
+	RB_Delete(key);
 }
 
 void rbTree::RB_Delete(const int &key)
 {
-}
+	TreeNode *theNode = Find(key);
 
-void rbTree::RB_Delete_FixedUp(TreeNode *node)
-{
+	COLOR deleteNodeColor = RED;
+	TreeNode *deleteNodeParent = nullptr;
+
+	if(theNode->right == NULL_ptr && theNode->left == NULL_ptr){
+		deleteNodeColor = theNode->color;
+		deleteNodeParent = theNode->parent;
+		cout<<NULL_ptr->element<<endl;
+		if(theNode == NULL_ptr)
+			cout<<"equity"<<endl;
+		destoryNode(theNode);
+		cout<<NULL_ptr->element<<endl;
+	}
+	else{
+		if(theNode->left == NULL_ptr){
+			theNode->element = theNode->right->element;
+			deleteNodeColor = theNode->right->color;
+			deleteNodeParent = theNode;
+			destoryNode(theNode->right);
+		}
+		else if(theNode->right == NULL_ptr){
+			theNode->element = theNode->left->element;
+			deleteNodeColor = theNode->left->color;
+			deleteNodeParent = theNode;
+			destoryNode(theNode->left);
+		}
+		else{
+			TreeNode *leftMax = maxmum(theNode->left);
+			theNode->element = leftMax->element;
+			deleteNodeColor = leftMax->color;
+			deleteNodeParent = leftMax->parent;
+			destoryNode(leftMax);
+		}
+
+	}
+//	if(deleteNodeColor == BLACK)
+//		RB_Delete_FixedUp(deleteNodeParent);
 }
 
 
