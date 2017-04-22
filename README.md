@@ -1,6 +1,6 @@
 # Data-Structures-Algorithms-and-Applications-in-C-
 
 
-##done it question
+## done it question
 
-###algorithm
+### algorithm
