@@ -1,112 +1,208 @@
-#include<iostream>
-#include<algorithm>
+#ifndef _ARRAY_LIST
+#define _ARRAY_LIST
+
 #include"linear.hpp"
+#include <iostream>
+#include <algorithm>
 
-using namespace std;
-
-template<typename T> class arrayList : public linearList<T>{
-	template<typename U>friend ostream &operator <<(ostream &os,const arrayList<U> &al);
+template<typename _Type> 
+class arrayList : public linearList<_Type>
+{
 public:
-//construct function
-	arrayList(int initialCapacity = 10);
-	arrayList(const arrayList<T> &);
-	~arrayList() { delete []element; }
-//ADT
-	bool empty() const { return listSize == 0; }
-	int size() const { return listSize; }
-	T &get(int theIndex) const;
-	int indexOf(const T &thelement) const;
-	void erase(int theIndex);
-	void insert(int theIndex,const T &ele);
-	void output(ostream &os) const;
+    using value_type = typename linearList<_Type>::value_type;
+    using iterator = typename linearList<_Type>::iterator;
+
+    arrayList();
+    arrayList(size_t initialCapacity);
+    arrayList(size_t initialCapacity, const value_type &ele);
+    arrayList(const arrayList<_Type> &obj);
+    arrayList(arrayList<_Type> &&obj);
+    virtual ~arrayList();
+
+    virtual bool empty() const
+    {
+        return length == 0;
+    }
+    virtual size_t size() const
+    {
+        return length;
+    }
+
+    //get element in array by index
+    value_type &at(size_t theIndex);
+
+    //get const or no-const iterator point to begin and end
+    iterator begin()
+    {
+        return start;
+    }
+    iterator end()
+    {
+        return over;
+    }
+    const iterator cbegin() const
+    {
+        return const_cast<const iterator>(start);
+    }
+    const iterator cend() const
+    {
+        return const_cast<const iterator>(over);
+    }
+
+    //erase single element or area
+    iterator erase(iterator index);
+    iterator erase(iterator _begin, iterator _end);
+    void pop_back();
+
+    //insert single/repeat element in special postion
+    iterator insert(iterator theIndex,const _Type &ele);
+    iterator insert(iterator pos, size_t number, const value_type &ele);
+    void push_back();
+
+    value_type &operator [](size_t index);
+    arrayList &operator =(const arrayList<_Type> &rhs);
+    arrayList &operator =(arrayList<_Type> &&rhs);
+    bool operator ==(const arrayList<_Type> &rhs);
+    bool operator !=(const arrayList<_Type> &rhs);
+    bool operator < (const arrayList<_Type> &rhs);
+    bool operator > (const arrayList<_Type> &rhs);
+    bool operator <=(const arrayList<_Type> &rhs);
+    bool operator >=(const arrayList<_Type> &rhs);
+
 private:
-	int checkIndex(int theIndex) const;
+    bool checkIndex(size_t theIndex) const;
+    void destory();
+    void init(size_t size);
 private:
-	T *element;
-	int arrayLength;
-	int listSize;
+    value_type *element;
+
+    iterator start;
+    iterator over;
+
+    size_t length;
+    size_t capacity;
+
 };
 
-template<typename T>
-T &arrayList<T>::get(int theIndex) const
+template<typename _Type>
+void arrayList<_Type>::init(size_t size)
 {
-	if( checkIndex(theIndex) )
-		return element[theIndex];
+    element = new _Type[size];
+    length = 0;
+    capacity = size;
+    start = element;
+    over = start;
 }
 
-template<typename T>
-int arrayList<T>::checkIndex(int theIndex) const
+template<typename _Type>
+arrayList<_Type>::arrayList()
 {
-	if(theIndex < 0 || theIndex >= listSize){
-		cout<<"error Index"<<endl;
-		return 0;
-	}
-	else
-		return 1;
+    init(20);
 }
 
-template<typename T>
-arrayList<T>::arrayList(int initialCapacity)
+template<typename _Type>
+arrayList<_Type>::arrayList(size_t initialCapacity)
 {
-	if(initialCapacity < 1)
-		cout<<"the parameter value error"<<endl;
-	element = new T[initialCapacity];
-	arrayLength = initialCapacity;
-	listSize = 0;
+    init(2 * initialCapacity);
+    length = initialCapacity;
+    std::fill(element, element + length, value_type());
+    over = start + length;
 }
 
-template<typename T>
-arrayList<T>::arrayList(const arrayList<T> &rhs)
+template<typename _Type>
+arrayList<_Type>::arrayList(const arrayList<_Type> &rhs)
 {
-	element = new T[rhs.arrayLength];
-	copy(rhs.element,rhs.element + listSize,element);
-	arrayLength = rhs.arrayLength;
-	listSize = rhs.listSize;
+    init(rhs.capacity);
+    length = rhs.length;
+    std::copy(rhs.element, rhs.element + length, element);
+    over = start + length;
 }
 
-template<typename T>
-int arrayList<T>::indexOf(const T &thelement) const
+template<typename _Type>
+arrayList<_Type>::arrayList(size_t initialCapacity, const value_type &ele)
 {
-	auto iter = find(element,element + listSize,thelement);
-	auto data = iter - element;
-	if( data == listSize )
-		return -1;
-	return data;
+    init(2 * initialCapacity);
+    length = initialCapacity;
+    std::fill(element, element + length, ele);
+    over = start + length;
 }
 
-template<typename T>
-void arrayList<T>::erase(int theIndex)
+template<typename _Type>
+arrayList<_Type>::arrayList(arrayList<_Type> &&rhs)
 {
-	if( checkIndex(theIndex) ){
-		copy(element + theIndex + 1,element + listSize,element + theIndex);
-		--listSize;
-	}
+    element = rhs.element;
+    length = rhs.length;
+    capacity = rhs.capacity;
+    start = rhs.start;
+    over = rhs.over;
 }
 
-template<typename T>
-void arrayList<T>::insert(int theIndex,const T &ele)
+
+template<typename _Type>
+arrayList<_Type>::~arrayList()
 {
-	if( listSize == arrayLength ){
-		changeLength1D(element,arrayLength,2 * arrayLength);
-		arrayLength *= 2;
-	}
-	copy(element + theIndex,element + listSize,element + theIndex + 1);
-	element[theIndex] = ele;
-	++listSize;
+    destory();
 }
 
-template<typename T>
-void arrayList<T>::output(ostream &os) const
+
+template<typename _Type>
+bool arrayList<_Type>::checkIndex(size_t theIndex) const
 {
-	for( int it = 0; it != listSize; ++it )
-		cout<<element[it]<<" ";
-	cout<<endl;
+    if(theIndex >= length){
+        std::cout<<"Error: index is not exist"<<std::endl;
+        return false;
+    }
+    else
+        return true;
 }
 
-template<typename U>
-ostream &operator <<(ostream &os,const arrayList<U> &al)
+template<typename _Type>
+void arrayList<_Type>::destory()
 {
-	for( int it = 0; it != al.listSize; ++it )
-		cout<<al.element[it];
-	return os;
+    delete []element;
+    start = nullptr;
+    over = nullptr;
+    length = 0;
+    capacity = 0;
 }
+
+template<typename _Type>
+typename arrayList<_Type>::value_type &arrayList<_Type>::at(size_t theIndex)
+{
+    if( checkIndex(theIndex) )
+        return element[theIndex];
+}
+
+
+template<typename _Type>
+typename arrayList<_Type>::iterator arrayList<_Type>::erase(iterator theIndex)
+{
+    std::copy(theIndex + 1, over,theIndex);
+    --length;
+    --over;
+}
+
+template<typename _Type>
+typename arrayList<_Type>::iterator arrayList<_Type>::erase(iterator _begin, iterator _end)
+{
+    std::copy(_end, over, _begin);
+    length = length - (_end - _begin);
+    over = start + length;
+}
+
+template<typename _Type>
+void arrayList<_Type>::pop_back()
+{
+    --length;
+    --over;
+}
+
+
+template<typename _Type>
+typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator theIndex, const _Type &ele)
+{
+
+}
+
+
+#endif

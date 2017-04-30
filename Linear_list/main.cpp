@@ -17,19 +17,35 @@ using namespace std;
 
 int main()
 {
-	arrayList<int> vec(20);
-	
-	cout<<vec.empty()<<endl;
-	cout<<vec.size()<<endl;
-	cout<<vec<<endl;
+    //construct function test 
+	arrayList<int> vec1(20);
+    arrayList<int> vec2;
+    arrayList<int> vec3(10, 5);
+    arrayList<int> vec4(vec1);
+    arrayList<int> *point = new arrayList<int>(20);
+    arrayList<int> vec5(move(*point));
+    point = nullptr;
 
-	vec.insert(0,4);
-	vec.insert(1,2);
-	vec.erase(1);
-	cout<<vec.indexOf(4)<<endl;
-	cout<<vec.get(0)<<endl;
+    //erase function
+    vec1.pop_back();
+    cout<<vec1.size()<<endl;
+    vec1.erase(vec1.begin());
+    cout<<vec1.size()<<endl;
+    vec1.erase(vec1.begin(), vec1.end());
+    cout<<vec1.size()<<endl;
+    size_t size = vec3.size();
+    for(size_t i = 0; i != size; ++i)
+    {
+        vec3.pop_back();
+    }
+    cout<<endl<<vec3.size()<<endl;
+    
+    //get element by index
 
-	cout<<vec<<endl;
+
+
+
+
 
 	return 0;
 }

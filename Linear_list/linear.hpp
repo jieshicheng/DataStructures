@@ -1,33 +1,12 @@
-#ifndef LINEAR
-#define LINEAR
+#include <iostream>
 
-#include<iostream>
-
-using namespace std;
-
-template<typename T> class linearList{
+template<typename _Type> class linearList{
 
 public:
+    typedef _Type value_type;
+    typedef _Type* iterator;
+
 	virtual ~linearList() { }
 	virtual bool empty() const = 0;
-	virtual int size() const = 0;
-	virtual T &get(int theIndex) const = 0;
-	virtual int indexOf(const T &thelement) const = 0;
-	virtual void erase(int theIndex) = 0;
-	virtual void insert(int theIndex,const T &ele) = 0;
-	virtual void output(ostream &os) const = 0;
+    virtual size_t size() const = 0;
 };
-
-#endif
-
-template<typename T>
-void changeLength1D(T *&a,int oldLength,int newLength)
-{
-	if( newLength < 0 )
-		cout<<"error"<<endl;
-	T *temp = new T[newLength];
-	copy(a,a + oldLength,temp);
-	delete []a;
-	a = temp;
-}
-
