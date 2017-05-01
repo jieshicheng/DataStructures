@@ -70,6 +70,7 @@ public:
     bool operator >=(const arrayList<_Type> &rhs);
 
 private:
+    void recalloc(size_t initialCapacity);
     bool checkIndex(size_t theIndex) const;
     void destory();
     void init(size_t size);
@@ -199,9 +200,46 @@ void arrayList<_Type>::pop_back()
 
 
 template<typename _Type>
+typename arrayList<_Type>::iterator arrayList<_Type>::recalloc(size_t initialCapacity)
+{
+    return (new value_type[initialCapacity]);
+}
+
+template<typename _Type>
 typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator theIndex, const _Type &ele)
 {
+    if(length == capacity)
+    {
+        int distance = theIndex - start;
+        iterator p = recalloc(2 * capacity);
+        copy(theIndex, over, p);
+        delete []element;
+        element = p;
+        length++;
+        capacity *= 2;
+        start = p;
+        over = p + length;
+        *(start + distance) = ele;
+    }
+    else
+    {
+        copy(theIndex, over, theIndex + 1);
+        *theIndex = ele;
+        over++;
+        length++;
+    }
+    return theIndex;
+}
 
+template<typename _Type>
+typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator pos, size_t number, const value_type &ele)
+{
+    if(length + number < capacity)
+    {
+        iterator p = recalloc(2 * (length + number));
+        copy(start, theIndex - 1, p);
+        iterator 
+    }
 }
 
 
