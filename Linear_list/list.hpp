@@ -57,7 +57,7 @@ public:
     //insert single/repeat element in special postion
     iterator insert(iterator theIndex,const _Type &ele);
     iterator insert(iterator pos, size_t number, const value_type &ele);
-    void push_back();
+    void push_back(const value_type &ele);
 
     value_type &operator [](size_t index);
     arrayList &operator =(const arrayList<_Type> &rhs);
@@ -200,9 +200,15 @@ void arrayList<_Type>::pop_back()
 
 
 template<typename _Type>
-typename arrayList<_Type>::iterator arrayList<_Type>::recalloc(size_t initialCapacity)
+void arrayList<_Type>::recalloc(size_t initialCapacity)
 {
-    return (new value_type[initialCapacity]);
+    iterator point = new value_type[initialCapacity];
+    std::copy(start, over, point);
+    delete []element;
+    element = point;
+    start = element;
+    over = element + length;
+    capacity = initialCapacity;
 }
 
 template<typename _Type>
@@ -210,37 +216,126 @@ typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator theIndex, 
 {
     if(length == capacity)
     {
-        int distance = theIndex - start;
-        iterator p = recalloc(2 * capacity);
-        copy(theIndex, over, p);
-        delete []element;
-        element = p;
-        length++;
-        capacity *= 2;
-        start = p;
-        over = p + length;
-        *(start + distance) = ele;
+        size_t distance = theIndex - start;
+        recalloc(2 * capacity);
+        theIndex = start + distance;
     }
-    else
-    {
-        copy(theIndex, over, theIndex + 1);
-        *theIndex = ele;
-        over++;
-        length++;
-    }
+    if(over != theIndex)
+        std::copy(theIndex, over, theIndex + 1);
+    *theIndex = ele;
+    over++;
+    length++;
     return theIndex;
 }
 
 template<typename _Type>
-typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator pos, size_t number, const value_type &ele)
+typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator theIndex, size_t number, const value_type &ele)
 {
-    if(length + number < capacity)
+    if(length + number > capacity)
     {
-        iterator p = recalloc(2 * (length + number));
-        copy(start, theIndex - 1, p);
-        iterator 
+        size_t distance = theIndex - start;
+        recalloc(2 * (length + number));
     }
+    std::copy(theIndex, over, theIndex + number);
+    std::fill(theIndex, theIndex + number, ele);
+    length = length + number;
+    over += number;
+    return theIndex;
 }
 
+template<typename _Type>
+void arrayList<_Type>::push_back(const value_type &ele)
+{
+    if(length == capacity)
+    {
+        recalloc(2 * capacity);
+    }
+    *over++ = ele;
+    length++;
+}
+
+template<typename _Type>
+typename arrayList<_Type>::value_type &arrayList<_Type>::operator [](size_t index)
+{
+    if( checkIndex(index) )
+        return element[index];
+}
+
+template<typename _Type>
+arrayList<_Type> &arrayList<_Type>::operator =(const arrayList<_Type> &rhs)
+{
+    delete []element;
+    init(rhs.capacity);
+    length = rhs.length;
+    std::copy(rhs.start, rhs.over, element);
+    start = element;
+    over = element + over;
+    return *this;
+}
+
+template<typename _Type>
+arrayList<_Type> &arrayList<_Type>::operator =(arrayList<_Type> &&rhs)
+{
+    delete []element;
+    element = rhs.element;
+    length = rhs.length;
+    capacity = rhs.capacity;
+    start = rhs.start;
+    over = rhs.over;
+}
+
+template<typename _Type>
+bool arrayList<_Type>::operator ==(const arrayList<_Type> &rhs)
+{
+    if(length != rhs.length)
+        return false;
+    else
+    {
+        size_t size = length;
+        for(size_t i = 0; i != size; ++i)
+        {
+            if((*this)[i] != rhs[i])
+                return false;
+        }
+    }
+    return true;
+}
+
+template<typename _Type>
+bool arrayList<_Type>::operator !=(const arrayList<_Type> &rhs)
+{
+    return !(this->operator ==(rhs));
+}
+
+template<typename _Type>
+bool arrayList<_Type>::operator <(const arrayList<_Type> &rhs)
+{
+    size_t i, size = min(rhs.length, length);
+    for(i = 0; i != size; ++i)
+    {
+        if((*this)[i] > rhs[i])
+            return false;
+    }
+    return length < rhs.length;
+}
+
+
+template<typename _Type>
+bool arrayList<_Type>::operator >(const arrayList<_Type> &rhs)
+{
+    return !(this->operator <(rhs));
+}
+
+template<typename _Type>
+bool arrayList<_Type>::operator <=(const arrayList<_Type> &rhs)
+{
+    return (this->operator <(rhs) || this->operator ==(rhs));
+}
+
+template<typename _Type>
+bool arrayList<_Type>::operator >=(const arrayList<_Type> &rhs)
+{
+    return (this->operator >(rhs) || this->operator ==(rhs));
+}
 
 #endif

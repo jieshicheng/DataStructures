@@ -26,6 +26,7 @@ int main()
     arrayList<int> vec5(move(*point));
     point = nullptr;
 
+    /*
     //erase function
     vec1.pop_back();
     cout<<vec1.size()<<endl;
@@ -42,8 +43,12 @@ int main()
     
     //get element by index
 
+    */
 
 
+    vec1.insert(vec1.begin(), 10, 4);
+    cout<<vec1.size()<<endl;
+    cout<<vec1.at(1);
 
 
 
