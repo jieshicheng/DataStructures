@@ -105,10 +105,70 @@ int main()
 
     
     /**
-     *  
-     *
-     *
+     *  insert function
+     *  element insert / range insert
+     *  Outcome:
+     *      Successful
      */
+    for(int i = 0; i != 10; ++i)
+    {
+        vec2.insert(vec2.begin(), i);
+        str1.insert(str1.begin(), "A");
+    }
+    echo(vec2);
+    output(str1);
 
-	return 0;
+    vec2.insert(vec2.end(), 10, 10);
+    str1.insert(str1.end(), 10, "A");
+    echo(vec2);
+    output(str1);
+
+    for(int i = 0; i != 10; ++i)
+    {
+        vec2.push_back(20);
+        str1.push_back("B");
+    }
+
+    echo(vec2);
+    output(str1);
+
+    /**
+     *  erase function
+     *  single element erase / range erase
+     *  Outcome:
+     *      Successful
+     */
+   
+    vec2.erase(vec2.begin());
+    cout<<"size of vec2<arrayList<int>) is: "<<vec2.size()<<endl;
+    vec2.pop_back();
+    cout<<"size of vec2<arrayList<int>) is: "<<vec2.size()<<endl;
+    vec2.erase(vec2.begin(), vec2.end());
+    cout<<"size of vec2<arrayList<int>) is: "<<vec2.size()<<endl;
+
+    /**
+     *  assigned function  
+     *  construct assigned / move assigned
+     *  Outcome:
+     *      Successful
+     */
+    arrayList<int> *point2 = new arrayList<int>;
+    *point2 = vec1;
+    if(*point2 == vec1)
+        cout<<"*point equal vec2"<<endl;
+    arrayList<int> *point3 = new arrayList<int>(30);
+    arrayList<int> vec7 = move(*point3);
+    point3 = nullptr;
+	
+    arrayList<int> vec8(30, 4);
+    arrayList<int> vec9(40, 3);
+    arrayList<int> vec10(30, 4);
+    arrayList<int> vec11(29, 4);
+    if(vec8 < vec9)
+        cout<<"vec8 less vec9"<<endl;
+    if(vec8 <= vec10)
+        cout<<"vec8 equal vec10"<<endl;
+    if(vec8 > vec11)
+        cout<<"vec8 greater vec11"<<endl;
+    return 0;
 }

@@ -80,12 +80,12 @@ public:
     const value_type &operator [](size_t index) const;
     arrayList &operator =(const arrayList<_Type> &rhs);
     arrayList &operator =(arrayList<_Type> &&rhs);
-    bool operator ==(const arrayList<_Type> &rhs);
-    bool operator !=(const arrayList<_Type> &rhs);
-    bool operator < (const arrayList<_Type> &rhs);
-    bool operator > (const arrayList<_Type> &rhs);
-    bool operator <=(const arrayList<_Type> &rhs);
-    bool operator >=(const arrayList<_Type> &rhs);
+    bool operator ==(const arrayList<_Type> &rhs) const;
+    bool operator !=(const arrayList<_Type> &rhs) const;
+    bool operator < (const arrayList<_Type> &rhs) const;
+    bool operator > (const arrayList<_Type> &rhs) const;
+    bool operator <=(const arrayList<_Type> &rhs) const;
+    bool operator >=(const arrayList<_Type> &rhs) const;
 
 private:
     void recalloc(size_t initialCapacity);
@@ -228,7 +228,7 @@ void arrayList<_Type>::pop_back()
 template<typename _Type>
 void arrayList<_Type>::recalloc(size_t initialCapacity)
 {
-    iterator point = new value_type[initialCapacity];
+    value_type *point = new value_type[initialCapacity];
     std::copy(start, over, point);
     delete []element;
     element = point;
@@ -261,8 +261,10 @@ typename arrayList<_Type>::iterator arrayList<_Type>::insert(iterator theIndex, 
     {
         size_t distance = theIndex - start;
         recalloc(2 * (length + number));
+        theIndex = start + distance;
     }
-    std::copy(theIndex, over, theIndex + number);
+    if(over != theIndex)
+        std::copy(theIndex, over, theIndex + number);
     std::fill(theIndex, theIndex + number, ele);
     length = length + number;
     over += number;
@@ -302,7 +304,7 @@ arrayList<_Type> &arrayList<_Type>::operator =(const arrayList<_Type> &rhs)
     length = rhs.length;
     std::copy(rhs.start, rhs.over, element);
     start = element;
-    over = element + over;
+    over = element + length;
     return *this;
 }
 
@@ -318,7 +320,7 @@ arrayList<_Type> &arrayList<_Type>::operator =(arrayList<_Type> &&rhs)
 }
 
 template<typename _Type>
-bool arrayList<_Type>::operator ==(const arrayList<_Type> &rhs)
+bool arrayList<_Type>::operator ==(const arrayList<_Type> &rhs) const
 {
     if(length != rhs.length)
         return false;
@@ -335,15 +337,15 @@ bool arrayList<_Type>::operator ==(const arrayList<_Type> &rhs)
 }
 
 template<typename _Type>
-bool arrayList<_Type>::operator !=(const arrayList<_Type> &rhs)
+bool arrayList<_Type>::operator !=(const arrayList<_Type> &rhs) const
 {
     return !(this->operator ==(rhs));
 }
 
 template<typename _Type>
-bool arrayList<_Type>::operator <(const arrayList<_Type> &rhs)
+bool arrayList<_Type>::operator <(const arrayList<_Type> &rhs) const
 {
-    size_t i, size = min(rhs.length, length);
+    size_t i, size = std::min(rhs.length, length);
     for(i = 0; i != size; ++i)
     {
         if((*this)[i] > rhs[i])
@@ -354,19 +356,19 @@ bool arrayList<_Type>::operator <(const arrayList<_Type> &rhs)
 
 
 template<typename _Type>
-bool arrayList<_Type>::operator >(const arrayList<_Type> &rhs)
+bool arrayList<_Type>::operator >(const arrayList<_Type> &rhs) const
 {
     return !(this->operator <(rhs));
 }
 
 template<typename _Type>
-bool arrayList<_Type>::operator <=(const arrayList<_Type> &rhs)
+bool arrayList<_Type>::operator <=(const arrayList<_Type> &rhs) const
 {
     return (this->operator <(rhs) || this->operator ==(rhs));
 }
 
 template<typename _Type>
-bool arrayList<_Type>::operator >=(const arrayList<_Type> &rhs)
+bool arrayList<_Type>::operator >=(const arrayList<_Type> &rhs) const
 {
     return (this->operator >(rhs) || this->operator ==(rhs));
 }
