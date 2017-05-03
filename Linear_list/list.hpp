@@ -13,15 +13,23 @@ public:
     using iterator = typename linearList<_Type>::iterator;
 
     arrayList();
-    arrayList(size_t initialCapacity);
+    explicit arrayList(size_t initialCapacity);
     arrayList(size_t initialCapacity, const value_type &ele);
     arrayList(const arrayList<_Type> &obj);
     arrayList(arrayList<_Type> &&obj);
     virtual ~arrayList();
 
+    virtual bool empty()
+    {
+        return length == 0;
+    }
     virtual bool empty() const
     {
         return length == 0;
+    }
+    virtual size_t size()
+    {
+        return length;
     }
     virtual size_t size() const
     {
@@ -30,6 +38,7 @@ public:
 
     //get element in array by index
     value_type &at(size_t theIndex);
+    const value_type &at(size_t theIndex) const;    //
 
     //get const or no-const iterator point to begin and end
     iterator begin()
@@ -39,6 +48,14 @@ public:
     iterator end()
     {
         return over;
+    }
+    const iterator begin() const
+    {
+        return const_cast<const iterator>(start);
+    }
+    const iterator end() const
+    {
+        return const_cast<const iterator>(over);
     }
     const iterator cbegin() const
     {
@@ -60,6 +77,7 @@ public:
     void push_back(const value_type &ele);
 
     value_type &operator [](size_t index);
+    const value_type &operator [](size_t index) const;
     arrayList &operator =(const arrayList<_Type> &rhs);
     arrayList &operator =(arrayList<_Type> &&rhs);
     bool operator ==(const arrayList<_Type> &rhs);
@@ -174,6 +192,14 @@ typename arrayList<_Type>::value_type &arrayList<_Type>::at(size_t theIndex)
         return element[theIndex];
 }
 
+template<typename _Type>
+const typename arrayList<_Type>::value_type &arrayList<_Type>::at(size_t theIndex) const
+{
+    if( checkIndex(theIndex) )
+        return const_cast<const value_type &>(element[theIndex]);
+}
+
+
 
 template<typename _Type>
 typename arrayList<_Type>::iterator arrayList<_Type>::erase(iterator theIndex)
@@ -259,6 +285,13 @@ typename arrayList<_Type>::value_type &arrayList<_Type>::operator [](size_t inde
 {
     if( checkIndex(index) )
         return element[index];
+}
+
+template<typename _Type>
+const typename arrayList<_Type>::value_type &arrayList<_Type>::operator [](size_t index) const
+{
+    if( checkIndex(index) )
+        return const_cast<const value_type &>(element[index]);
 }
 
 template<typename _Type>

@@ -3,7 +3,7 @@
 
 @file    Linear_list
 @author  jieshicheng
-@data    1 Nov 2016
+@data    1 May 2017
 @remark  linear list
 @note    this is a test txt
 
@@ -15,42 +15,100 @@
 
 using namespace std;
 
+/**
+ *  test function
+ *      echo arrayList<T> element by iterator
+ */
+template<typename _Type>
+void echo(const arrayList<_Type> &arr)
+{
+    typename arrayList<_Type>::iterator iter = arr.begin();
+    while(iter != arr.end())
+    {
+        cout<<*iter++<<" ";
+    }
+    cout<<endl;
+}
+
+/**
+ *  test function
+ *      echo arrayList<T> element by index
+ */
+template<typename _Type>
+void print(const arrayList<_Type> &arr)
+{
+    size_t i = 0, size = arr.size();
+    while(i != size)
+    {
+        cout<<arr.at(i++)<<" ";
+    }
+    cout<<endl;
+}
+
+template<typename _Type>
+void output(const arrayList<_Type> &arr)
+{
+    size_t i = 0, size = arr.size();
+    while(i != size)
+    {
+        cout<<arr[i++]<<" ";
+    }
+    cout<<endl;
+}
+
+
 int main()
 {
-    //construct function test 
-	arrayList<int> vec1(20);
+    /**
+     *  construct function test 
+     *  Five ways to construct arrayList   
+     *  Outcome:
+     *      Successful
+     */
+    arrayList<int> vec1(20);
     arrayList<int> vec2;
-    arrayList<int> vec3(10, 5);
+    const arrayList<int> vec3(10, 5);
     arrayList<int> vec4(vec1);
     arrayList<int> *point = new arrayList<int>(20);
     arrayList<int> vec5(move(*point));
     point = nullptr;
+    arrayList<string> str1(10);
+    arrayList<string> str2(10, "A");
 
-    /*
-    //erase function
-    vec1.pop_back();
-    cout<<vec1.size()<<endl;
-    vec1.erase(vec1.begin());
-    cout<<vec1.size()<<endl;
-    vec1.erase(vec1.begin(), vec1.end());
-    cout<<vec1.size()<<endl;
-    size_t size = vec3.size();
-    for(size_t i = 0; i != size; ++i)
-    {
-        vec3.pop_back();
-    }
-    cout<<endl<<vec3.size()<<endl;
+    echo(vec1);
+    echo(vec2);
+    print(vec3);
+    print(vec4);
+    print(vec5);
+    output(str1);
+    output(str2);
+
+    /**
+     *  base function
+     *  size(), empty()
+     *  Outcome:
+     *      Successful
+     */
+    cout<<"size of vec1(arrayList<int>) is: "<<vec1.size()<<endl;
+    cout<<"size of vec3(const arrayList<int>) is: "<<vec3.size()<<endl;
+    cout<<"whether vec2 is empty?  "<<vec2.empty()<<endl;
+
+    /**
+     *  access element function
+     *  begin(), end(), at(), operator []()
+     *  Outcome:
+     *      Successful
+     */
+    //  echo()    prove by begin(), end()
+    //  print()    prove by at()
+    //  output()    prove by operator []()
+
     
-    //get element by index
-
-    */
-
-
-    vec1.insert(vec1.begin(), 10, 4);
-    cout<<vec1.size()<<endl;
-    cout<<vec1.at(1);
-
-
+    /**
+     *  
+     *
+     *
+     */
 
 	return 0;
 }
